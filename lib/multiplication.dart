@@ -6,13 +6,13 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 //import 'dart:typed_data';
 
-class Multiplication extends StatefulWidget {
-  const Multiplication({Key?  key}) : super(key: key);
+class MultiplicationScreen extends StatefulWidget {
+  const MultiplicationScreen({Key?  key}) : super(key: key);
   @override
-  State<Multiplication> createState() => _Multiplication();
+  State<MultiplicationScreen> createState() => _MultiplicationScreen();
 }
 
-class _Multiplication extends State<Multiplication> {
+class _MultiplicationScreen extends State<MultiplicationScreen> {
   int selectedValue = 1;
   int selectedModeValue = 0;
   List<int> numbers = [1,2,3,4,5,6,7,8,9,10];

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 //import 'dart:typed_data';
 
 import 'multiplication.dart';
+import 'addition.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key?  key}) : super(key: key);
@@ -16,9 +17,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreen extends State<MainScreen> {
   Map<String,WidgetBuilder> screens = {
-    '/Таблиці множення': (context) => const Multiplication(),
-    '/Додавання': (context) => const Multiplication(),
-    '/Віднімання': (context) => const Multiplication(),
+    '/Таблиці множення': (context) => const MultiplicationScreen(),
+    '/Додавання': (context) => const AdditionScreen(),
+    '/Віднімання': (context) => const MultiplicationScreen(),
   };
 
   void initState() {
