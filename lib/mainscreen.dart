@@ -17,6 +17,7 @@ class _MainScreen extends State<MainScreen> {
     '/Віднімання': (context) => const SubstractionScreen(),
   };
 
+  @override
   void initState() {
     super.initState();
   }

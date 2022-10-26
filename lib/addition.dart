@@ -13,11 +13,12 @@ class AdditionScreen extends StatefulWidget {
 }
 
 class _AdditionScreen extends State<AdditionScreen> {
-  int selectedValue = 1;
+  int firstSelectedValue = 1;
+  int secondSelectedValue = 1;
   int selectedModeValue = 0;
   List<int> numbers = [1,2,3,4,5,6,7,8,9,10];
   int currentIndex = 0;
-  String question = '1 X 1';
+  String question = '1 + 1';
   int intResult = 1;
   String strResult = '';
   Color unswerStringColor = Colors.blue;
@@ -69,43 +70,30 @@ class _AdditionScreen extends State<AdditionScreen> {
     //double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Множення'),
+        title: const Text('Додавання'),
         actions: [
           DropdownButton(
               value: selectedModeValue,
               icon: const Icon(Icons.menu),
               style: const TextStyle(color: Colors.white),
               items: const [
-                DropdownMenuItem(value: 0,child: Text('Навчання',style:TextStyle(color:Colors.black))
+                DropdownMenuItem(value: 0,child: Text('Тренування',style:TextStyle(color:Colors.black)),
                 ),
-                DropdownMenuItem(value: 1,child: Text('Тренування',style:TextStyle(color:Colors.black)),
-
-                ),
-                DropdownMenuItem(value: 2,child: Text('Тестування',style:TextStyle(color:Colors.black)),
+                DropdownMenuItem(value: 1,child: Text('Тестування',style:TextStyle(color:Colors.black)),
                 )
               ],
               onChanged: (int? value) {
                 setState(() {
                   selectedModeValue = value!;
                   if(value == 0) {
-                    learningFlag = true;
-                    trainingFlag = false;
-                    testingFlag = false;
-                    currentIndex = 0;
-                  }
-                  if(value == 1) {
-                    learningFlag = false;
                     trainingFlag = true;
                     testingFlag = false;
                     currentIndex = 0;
                   }
-                  if(value == 2) {
-                    learningFlag = false;
+                  if(value == 1) {
                     trainingFlag = false;
                     testingFlag = true;
                     currentIndex = 0;
-                    questionForTesting = [0,1,2,3,4,5,6,7,8,9];
-                    resultCount = 0;
                   }
                 });
               }
@@ -121,19 +109,30 @@ class _AdditionScreen extends State<AdditionScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      //const Text("Множення",style: TextStyle(fontSize: 20)),
+                      const Text("Перше число",style: TextStyle(fontSize: 20)),
                       const SizedBox(width: 10),
                       DropdownButton(
-                        value: selectedValue,
+                        value: firstSelectedValue,
                         items: [for(int i=1;i<10;++i) DropdownMenuItem(value:i,child: Text(i.toString(),style: const TextStyle(fontSize: 20))),],
                         onChanged: (int? value) {setState(() {
-                          selectedValue = value!;
-                          currentIndex = 0;
-                          question = '$selectedValue X ${numbers[currentIndex]}';
-                          intResult = selectedValue * numbers[currentIndex];
+                          firstSelectedValue = value!;
+                          //generate question
+                          generateQuestion();
                         });},
                       ),
                       const Spacer(),
+                      const Text('Друге число',style: TextStyle(fontSize: 20)),
+                      const SizedBox(width:10),
+                      DropdownButton(
+                        value: secondSelectedValue,
+                        items: [for(int i=1;i<10;++i) DropdownMenuItem(value:i,child: Text(i.toString(),style: const TextStyle(fontSize: 20))),],
+                        onChanged: (int? value) {setState(() {
+                          secondSelectedValue = value!;
+                          //generate question
+                        });
+                        generateQuestion();
+                          },
+                      ),
                     ],),
 
                   const SizedBox(height:10),
@@ -188,29 +187,15 @@ class _AdditionScreen extends State<AdditionScreen> {
   void generateQuestion() {
     setState(() {
       inputFlag = true;
-      if (learningFlag) {
-        currentIndex++;
-        if (currentIndex > numbers.length - 1) {
-          currentIndex = 0;
-        }
+      //add generate question code here
+      int firstMaxValue = pow(10,firstSelectedValue).toInt() - 1;
+      int secondMaxValue = pow(10,secondSelectedValue).toInt() - 1;
+      if(trainingFlag) {
+        int firstValue = Random().nextInt(firstMaxValue);
+        int secondValue = Random().nextInt(secondMaxValue);
+        intResult = firstMaxValue + secondMaxValue;
+        question = '$firstValue + $secondValue';
       }
-      if(trainingFlag){
-        currentIndex = Random().nextInt(9) + 1;
-      }
-      if(testingFlag) {
-        if(questionForTesting.isNotEmpty) {
-          questionForTesting.shuffle(Random());
-          currentIndex = questionForTesting.removeLast();
-        }
-        else {
-          strResult = '$resultCount/$questionCount';
-          return;
-        }
-      }
-      question = '$selectedValue X ${numbers[currentIndex]}';
-      intResult = selectedValue * numbers[currentIndex];
-      unswerStringColor = Colors.blue;
-      strResult = '';
     });
   }
 

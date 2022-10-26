@@ -1,1 +1,3 @@
 # TrainingBraine
+
+Training platform
