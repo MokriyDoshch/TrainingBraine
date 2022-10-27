@@ -19,12 +19,11 @@ class _AdditionScreen extends State<AdditionScreen> {
   List<int> numbers = [1,2,3,4,5,6,7,8,9,10];
   int currentIndex = 0;
   String question = '1 + 1';
-  int intResult = 1;
+  int intResult = 2;
   String strResult = '';
   Color unswerStringColor = Colors.blue;
   bool inputFlag = true;
-  bool learningFlag = true;
-  bool trainingFlag = false;
+  bool trainingFlag = true;
   bool testingFlag = false;
   List<int> questionForTesting = [0,1,2,3,4,5,6,7,8,9];
   int questionCount = 0;
