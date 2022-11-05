@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
-//import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-//import 'dart:typed_data';
 
 class AdditionScreen extends StatefulWidget {
   const AdditionScreen({Key?  key}) : super(key: key);
@@ -25,7 +23,7 @@ class _AdditionScreen extends State<AdditionScreen> {
   bool inputFlag = true;
   bool trainingFlag = true;
   bool testingFlag = false;
-  List<int> questionForTesting = [0,1,2,3,4,5,6,7,8,9];
+  List<int> questionForTesting = [];
   int questionCount = 0;
   int resultCount = 0;
   String audioassetTrue = 'assets/audio/Write1.mp3';
@@ -84,6 +82,8 @@ class _AdditionScreen extends State<AdditionScreen> {
               onChanged: (int? value) {
                 setState(() {
                   selectedModeValue = value!;
+                  resultCount = 0;
+                  questionCount = 0;
                   if(value == 0) {
                     trainingFlag = true;
                     testingFlag = false;
@@ -93,7 +93,14 @@ class _AdditionScreen extends State<AdditionScreen> {
                     trainingFlag = false;
                     testingFlag = true;
                     currentIndex = 0;
+                    for(int i = 0;i < 20;++i) {
+                      List numbers = generateNumbers();
+                      questionForTesting.add(numbers[0]);
+                      questionForTesting.add(numbers[1]);
+                    }
+                    questionCount = questionForTesting.length~/2;
                   }
+                  generateQuestion();
                 });
               }
           )
@@ -186,16 +193,38 @@ class _AdditionScreen extends State<AdditionScreen> {
   void generateQuestion() {
     setState(() {
       inputFlag = true;
+      unswerStringColor = Colors.blue;
       //add generate question code here
-      int firstMaxValue = pow(10,firstSelectedValue).toInt() - 1;
-      int secondMaxValue = pow(10,secondSelectedValue).toInt() - 1;
+
       if(trainingFlag) {
-        int firstValue = Random().nextInt(firstMaxValue);
-        int secondValue = Random().nextInt(secondMaxValue);
-        intResult = firstMaxValue + secondMaxValue;
-        question = '$firstValue + $secondValue';
+        List numbers = generateNumbers();
+        intResult = numbers[0] + numbers[1];
+        question = '${numbers[0]} + ${numbers[1]}';
       }
+      if(testingFlag) {
+        if(questionForTesting.isNotEmpty) {
+          int first = questionForTesting.removeAt(0);
+          int second = questionForTesting.removeAt(0);
+          intResult = first + second;
+          question = '$first + $second';
+        } else {
+          question = '$resultCount/$questionCount';
+        }
+      }
+      strResult = '';
     });
+  }
+
+  List<int> generateNumbers() {
+    int firstMaxValue = pow(10,firstSelectedValue).toInt() - 1;
+    int firstMinValue = pow(10,firstSelectedValue - 1).toInt();
+    int secondMaxValue = pow(10,secondSelectedValue).toInt() - 1;
+    int secondMinValue = pow(10,secondSelectedValue - 1).toInt();
+    int firstValue = Random().nextInt(firstMaxValue);
+    if(firstValue < firstMinValue) {firstValue += firstMinValue;}
+    int secondValue = Random().nextInt(secondMaxValue);
+    if(secondValue < secondMinValue) {secondValue += secondMinValue;}
+    return [firstValue,secondValue];
   }
 
   void onButtonPressed(String nameButton) {

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
-//import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-//import 'dart:typed_data';
 
 class MultiplicationScreen extends StatefulWidget {
   const MultiplicationScreen({Key?  key}) : super(key: key);
@@ -25,7 +23,7 @@ class _MultiplicationScreen extends State<MultiplicationScreen> {
   bool learningFlag = true;
   bool trainingFlag = false;
   bool testingFlag = false;
-  List<int> questionForTesting = [0,1,2,3,4,5,6,7,8,9];
+  List<int> questionForTesting = [1,2,3,4,5,6,7,8,9,10];
   int questionCount = 0;
   int resultCount = 0;
   String audioassetTrue = 'assets/audio/Write1.mp3';
@@ -48,7 +46,6 @@ class _MultiplicationScreen extends State<MultiplicationScreen> {
     }
     );
     super.initState();
-    questionCount = questionForTesting.length;
   }
 
   void startTimer() {
@@ -105,8 +102,10 @@ class _MultiplicationScreen extends State<MultiplicationScreen> {
                         testingFlag = true;
                         currentIndex = 0;
                         questionForTesting = [0,1,2,3,4,5,6,7,8,9];
+                        questionCount = questionForTesting.length;
                         resultCount = 0;
                       }
+                      generateQuestion();
                     });
                   }
               )
