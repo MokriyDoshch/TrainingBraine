@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 
+import 'popup_dialog.dart';
+
 class AdditionScreen extends StatefulWidget {
   const AdditionScreen({Key?  key}) : super(key: key);
   @override
@@ -66,6 +68,32 @@ class _AdditionScreen extends State<AdditionScreen> {
     ];
     //double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: IconButton(
+          onPressed: () {
+            showDialog(
+              barrierDismissible: false,
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return PopUpDialog(title: 'hello',
+                      content: 'hello world',
+                    actions: <Widget>[
+                      Container(
+                      child: ElevatedButton(
+                        child: Text('Retry'),
+                        onPressed: () {},
+                      ),
+                    ),
+                      Container(
+                        child: ElevatedButton(
+                          child: Text('Cancel'),
+                          onPressed: () {Navigator.of(dialogContext).pop();},
+                        ),
+                      ),
+                    ]
+                  );
+                });
+          },
+          icon: const Icon(Icons.add)),
       appBar: AppBar(
         title: const Text('Додавання'),
         actions: [
