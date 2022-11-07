@@ -218,12 +218,12 @@ class _AdditionScreen extends State<AdditionScreen> {
   List<int> generateNumbers() {
     int firstMaxValue = pow(10,firstSelectedValue).toInt() - 1;
     int firstMinValue = pow(10,firstSelectedValue - 1).toInt();
+
     int secondMaxValue = pow(10,secondSelectedValue).toInt() - 1;
     int secondMinValue = pow(10,secondSelectedValue - 1).toInt();
-    int firstValue = Random().nextInt(firstMaxValue);
-    if(firstValue < firstMinValue) {firstValue += firstMinValue;}
-    int secondValue = Random().nextInt(secondMaxValue);
-    if(secondValue < secondMinValue) {secondValue += secondMinValue;}
+
+    int firstValue = Random().nextInt(firstMaxValue-firstMinValue) + firstMinValue;
+    int secondValue = Random().nextInt(secondMaxValue-secondMinValue) + secondMinValue;
     return [firstValue,secondValue];
   }
 

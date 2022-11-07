@@ -150,6 +150,9 @@ class _SubstractionScreen extends State<SubstractionScreen> {
                     onChanged: (int? value) {
                       setState(() {
                         firstSelectedValue = value!;
+                        if(firstSelectedValue < secondSelectedValue) {
+                          secondSelectedValue = value!;
+                        }
                       });
                       //generate question
                       generateQuestion();
@@ -161,7 +164,7 @@ class _SubstractionScreen extends State<SubstractionScreen> {
                   DropdownButton(
                     value: secondSelectedValue,
                     items: [
-                      for (int i = 1; i < 10; ++i)
+                      for (int i = 1; i <= firstSelectedValue; ++i)
                         DropdownMenuItem(
                             value: i,
                             child: Text(i.toString(),
@@ -252,19 +255,22 @@ class _SubstractionScreen extends State<SubstractionScreen> {
   }
 
   List<int> generateNumbers() {
-    int resultMaxValue = pow(10, firstSelectedValue).toInt() - 1;
-    int resultMinValue = pow(10, firstSelectedValue - 1).toInt();
+    int firstMaxValue = pow(10, firstSelectedValue).toInt() - 1;
+    int firstMinValue = pow(10, firstSelectedValue - 1).toInt();
+
     int secondMaxValue = pow(10, secondSelectedValue).toInt() - 1;
     int secondMinValue = pow(10, secondSelectedValue - 1).toInt();
-    int resultValue = Random().nextInt(resultMaxValue);
-    if (resultValue < resultMinValue) {
-      resultValue += resultMinValue;
+
+    int firstValue = Random().nextInt(firstMaxValue-firstMinValue) + firstMinValue;
+    int secondValue = Random().nextInt(secondMaxValue-secondMinValue) + secondMinValue;
+    if(firstValue - secondValue < 0) {
+      secondValue = Random().nextInt(firstValue-secondMinValue) + secondMinValue;
     }
-    int secondValue = Random().nextInt(secondMaxValue);
-    if (secondValue < secondMinValue) {
-      secondValue += secondMinValue;
-    }
-    return [resultValue + secondValue, secondValue];
+    /*while(firstValue-secondValue < 0) {
+      firstValue = Random().nextInt(firstMaxValue-firstMinValue) + firstMinValue;
+      secondValue = Random().nextInt(secondMaxValue-secondMinValue) + secondMinValue;
+    }*/
+    return [firstValue, secondValue];
   }
 
   void onButtonPressed(String nameButton) {
