@@ -68,32 +68,6 @@ class _AdditionScreen extends State<AdditionScreen> {
     ];
     //double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      floatingActionButton: IconButton(
-          onPressed: () {
-            showDialog(
-              barrierDismissible: false,
-                context: context,
-                builder: (BuildContext dialogContext) {
-                  return PopUpDialog(title: 'hello',
-                      content: 'hello world',
-                    actions: <Widget>[
-                      Container(
-                      child: ElevatedButton(
-                        child: Text('Retry'),
-                        onPressed: () {},
-                      ),
-                    ),
-                      Container(
-                        child: ElevatedButton(
-                          child: Text('Cancel'),
-                          onPressed: () {Navigator.of(dialogContext).pop();},
-                        ),
-                      ),
-                    ]
-                  );
-                });
-          },
-          icon: const Icon(Icons.add)),
       appBar: AppBar(
         title: const Text('Додавання'),
         actions: [
@@ -121,6 +95,7 @@ class _AdditionScreen extends State<AdditionScreen> {
                     trainingFlag = false;
                     testingFlag = true;
                     currentIndex = 0;
+                    questionForTesting.clear();
                     for(int i = 0;i < 20;++i) {
                       List numbers = generateNumbers();
                       questionForTesting.add(numbers[0]);
@@ -236,7 +211,10 @@ class _AdditionScreen extends State<AdditionScreen> {
           intResult = first + second;
           question = '$first + $second';
         } else {
-          question = '$resultCount/$questionCount';
+          strResult = '';
+          question = '';
+          showResultDialog();
+          return;
         }
       }
       strResult = '';
@@ -253,6 +231,44 @@ class _AdditionScreen extends State<AdditionScreen> {
     int firstValue = Random().nextInt(firstMaxValue-firstMinValue) + firstMinValue;
     int secondValue = Random().nextInt(secondMaxValue-secondMinValue) + secondMinValue;
     return [firstValue,secondValue];
+  }
+
+  void showResultDialog() {
+    setState(() {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return PopUpDialog(
+                title: 'Результат',
+                content: '$resultCount/$questionCount',
+                actions: <Widget>[
+                  ElevatedButton(
+                    child: const Text('Ще раз'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      trainingFlag = false;
+                      testingFlag = true;
+                      currentIndex = 0;
+                      for(int i = 0;i < 20;++i) {
+                        List numbers = generateNumbers();
+                        questionForTesting.add(numbers[0]);
+                        questionForTesting.add(numbers[1]);
+                      }
+                      questionCount = questionForTesting.length~/2;
+                      generateQuestion();
+                    },
+                  ),
+                  ElevatedButton(
+                    child: const Text('Відмінити'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ]);
+          });
+    });
   }
 
   void onButtonPressed(String nameButton) {

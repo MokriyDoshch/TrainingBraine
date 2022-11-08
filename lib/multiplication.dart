@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 
+import 'popup_dialog.dart';
+
 class MultiplicationScreen extends StatefulWidget {
   const MultiplicationScreen({Key?  key}) : super(key: key);
   @override
@@ -202,7 +204,9 @@ class _MultiplicationScreen extends State<MultiplicationScreen> {
           currentIndex = questionForTesting.removeLast();
         }
         else {
-          strResult = '$resultCount/$questionCount';
+          strResult = '';
+          question = '';
+          showResultDialog();
           return;
         }
       }
@@ -210,6 +214,42 @@ class _MultiplicationScreen extends State<MultiplicationScreen> {
       intResult = selectedValue * numbers[currentIndex];
       unswerStringColor = Colors.blue;
       strResult = '';
+    });
+  }
+
+  void showResultDialog() {
+    setState(() {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return PopUpDialog(
+                title: 'Результат',
+                content: '$resultCount/$questionCount',
+                actions: <Widget>[
+                  ElevatedButton(
+                    child: const Text('Ще раз'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      learningFlag = false;
+                      trainingFlag = false;
+                      testingFlag = true;
+                      currentIndex = 0;
+                      questionForTesting = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+                      questionCount = questionForTesting.length;
+                      resultCount = 0;
+                      generateQuestion();
+                    },
+                  ),
+                  ElevatedButton(
+                    child: const Text('Відмінити'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ]);
+          });
     });
   }
 

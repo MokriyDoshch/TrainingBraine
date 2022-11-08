@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 
+import 'popup_dialog.dart';
+
 class SubstractionScreen extends StatefulWidget {
   const SubstractionScreen({Key? key}) : super(key: key);
 
@@ -116,6 +118,7 @@ class _SubstractionScreen extends State<SubstractionScreen> {
                     trainingFlag = false;
                     testingFlag = true;
                     currentIndex = 0;
+                    questionForTesting.clear();
                     for (int i = 0; i < 20; ++i) {
                       List numbers = generateNumbers();
                       questionForTesting.add(numbers[0]);
@@ -247,7 +250,10 @@ class _SubstractionScreen extends State<SubstractionScreen> {
           intResult = first - second;
           question = '$first - $second';
         } else {
-          question = '$resultCount/$questionCount';
+          question = '';
+          strResult = '';
+          showResultDialog();
+          return;
         }
       }
       strResult = '';
@@ -266,11 +272,45 @@ class _SubstractionScreen extends State<SubstractionScreen> {
     if(firstValue - secondValue < 0) {
       secondValue = Random().nextInt(firstValue-secondMinValue) + secondMinValue;
     }
-    /*while(firstValue-secondValue < 0) {
-      firstValue = Random().nextInt(firstMaxValue-firstMinValue) + firstMinValue;
-      secondValue = Random().nextInt(secondMaxValue-secondMinValue) + secondMinValue;
-    }*/
     return [firstValue, secondValue];
+  }
+
+  void showResultDialog() {
+    setState(() {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return PopUpDialog(
+                title: 'Результат',
+                content: '$resultCount/$questionCount',
+                actions: <Widget>[
+                  ElevatedButton(
+                    child: const Text('Ще раз'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      trainingFlag = false;
+                      testingFlag = true;
+                      currentIndex = 0;
+                      for (int i = 0; i < 20; ++i) {
+                        List numbers = generateNumbers();
+                        questionForTesting.add(numbers[0]);
+                        questionForTesting.add(numbers[1]);
+                      }
+                      questionCount = questionForTesting.length ~/ 2;
+                      generateQuestion();
+                    },
+                  ),
+                  ElevatedButton(
+                    child: const Text('Відмінити'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ]);
+          });
+    });
   }
 
   void onButtonPressed(String nameButton) {
